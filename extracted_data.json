@@ -1,0 +1,13 @@
+{
+  "customer_name": "Max Kerr",
+  "phone_number": "804-555-2211",
+  "email": "",
+  "service_address": "123 Maple Street, Richmond, Virginia",
+  "job_type": "Air Conditioning Repair",
+  "problem_description": "Air conditioner stopped blowing cold air; possible compressor issue.",
+  "urgency": "High",
+  "preferred_time": "Tomorrow morning",
+  "technician_preference": "Mike",
+  "price_reference": "$89 diagnostic fee",
+  "notes": ""
+}
