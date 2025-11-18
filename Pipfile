@@ -1,0 +1,12 @@
+[requires]
+python_version = "3.12"
+
+[packages]
+fastapi = "*"
+uvicorn = "*"
+httpx = "*"
+python-dotenv = "*"
+openai = "*"
+pydantic = "*"
+psycopg2-binary = "*"
+twilio = "*"
