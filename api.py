@@ -9,13 +9,19 @@ from sms import send_sms
 
 
 from ai_notetaker import process_audio_file
-from init_db import create_tables, get_connection   # <-- PostgreSQL only
-
-# -----------------------------------------------------
-# INIT APP + DB
-# -----------------------------------------------------
-app = FastAPI()
 from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://leadrescue-frontend.vercel.app",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -231,4 +237,5 @@ def get_job(job_id: int, x_api_key: str = Header(...)):
     if not row:
         raise HTTPException(status_code=404, detail="Job not found")
     return {"job": row}
+
 
