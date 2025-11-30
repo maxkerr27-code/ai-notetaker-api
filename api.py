@@ -15,6 +15,19 @@ from init_db import create_tables, get_connection   # <-- PostgreSQL only
 # INIT APP + DB
 # -----------------------------------------------------
 app = FastAPI()
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "https://leadrescue-frontend.vercel.app",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # Ensure tables exist on start
 create_tables()
@@ -72,8 +85,8 @@ async def twilio_voice(request: Request):
     api_key = request.query_params.get("x-api-key")
     xml = f"""
     <Response>
-        <Record
-            action="https://ai-notetaker-api.onrender.com/twilio_recording?x-api-key={api_key}"
+    <Record
+        action="https://ai-notetaker-api-1.onrender.com/twilio_recording?x-api-key={api_key}"
             method="POST"
             playBeep="true"
             finishOnKey="#"
@@ -191,6 +204,23 @@ def get_job(job_id: int, x_api_key: str = Header(...)):
     company_id = get_company_id_from_key(x_api_key)
     if not company_id:
         raise HTTPException(status_code=401, detail="Invalid API key")
+
+    @app.get("/db_upgrade")
+    async def db_upgrade():
+        conn = get_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("""
+                ALTER TABLE companies ADD COLUMN IF NOT EXISTS owner_phone TEXT;
+                ALTER TABLE companies ADD COLUMN IF NOT EXISTS owner_email TEXT;
+                ALTER TABLE companies ADD COLUMN IF NOT EXISTS notify_sms BOOLEAN DEFAULT TRUE;
+            """)
+            conn.commit()
+            cursor.close()
+            conn.close()
+            return {"status": "success"}
+        except Exception as e:
+            return {"error": str(e)}
 
     conn = get_connection()
     cursor = conn.cursor()
