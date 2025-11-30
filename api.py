@@ -23,7 +23,7 @@ app.add_middleware(
         "http://localhost:3000",
         "https://leadrescue-frontend.vercel.app",
     ],
-    allow_credentials=True,
+    allow_credentials=False,     # 👈 must be False if using "*" on methods/headers
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -231,3 +231,4 @@ def get_job(job_id: int, x_api_key: str = Header(...)):
     if not row:
         raise HTTPException(status_code=404, detail="Job not found")
     return {"job": row}
+
